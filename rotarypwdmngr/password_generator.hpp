@@ -15,7 +15,6 @@ public:
 
 private:
 	std::string m_password;
-	uint32_t m_entropy_bits;
 	void strengthen_password() {
 		if (entropy_bits(m_password) >= max_entropy(m_password.size())) // if the password is already strong discards the function
 			return;

@@ -41,9 +41,9 @@ void DebugFunc()
 
 int main()
 {
+	/*
 	std::cout << "Hello World!\n";
 	DebugFunc();
 	return 0;
+	*/;
 }
-
-

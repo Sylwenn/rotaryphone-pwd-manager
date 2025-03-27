@@ -14,6 +14,10 @@
 #include <random>
 #include <algorithm>
 #include <cmath>
+#include <memory>
+#include <span>
+#include <bitset>
+#include <format>
 
 
 //IMGUI (TODO)

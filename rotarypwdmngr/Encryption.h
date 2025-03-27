@@ -14,10 +14,9 @@ public:
 	string generateKey(const size_t& length) {
 		std::default_random_engine rng(std::random_device{}());
 		std::uniform_int_distribution<> dist(0, sizeof(charset) - 2);
-		string key;
-		for (size_t i = 0; i < length; ++i)
-		{
-			key += charset[dist(rng)];
+		string key = string(' ', length);
+		for (size_t i = 0; i < length; ++i) {
+			key = charset[dist(rng)];
 		}
 		return key;
 	}

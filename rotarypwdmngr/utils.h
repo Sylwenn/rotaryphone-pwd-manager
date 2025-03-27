@@ -163,6 +163,11 @@ bool isBinary(const std::string& data)
 	return false;
 }
 
-
-
+std::string bitcastString(const std::string& str) {
+	std::string a;
+	for (unsigned char c : str) {
+		a += (std::bitset<8>(c)).to_string();
+	}
+	return a;
+}
 #endif
