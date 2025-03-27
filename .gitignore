@@ -216,7 +216,8 @@ DocProject/Help/html
 
 # Click-Once directory
 publish/
-
+x64/
+build/
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml
@@ -268,6 +269,7 @@ _pkginfo.txt
 !?*.[Cc]ache/
 
 # Others
+.txt
 ClientBin/
 ~$*
 *~

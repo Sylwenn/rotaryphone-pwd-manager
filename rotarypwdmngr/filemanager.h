@@ -1,17 +1,5 @@
 #pragma once
 #include "includes.h"
-
-
-bool isBinary(const std::string& data)
-{
-	for (char ch : data) {
-		if (ch < 32 || ch > 126) {
-			return true;
-		}
-	}
-	return false; 
-}
-
 class FileManager
 {
 public:
