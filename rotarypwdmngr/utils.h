@@ -1,4 +1,6 @@
 #pragma once
+#ifndef UTILS
+#define UTILS
 const char ascii_pool[] = "!\"#$%&\'()*+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz";
 constexpr uint32_t ascii_length = sizeof(ascii_pool) / sizeof(char);
 
@@ -158,3 +160,7 @@ bool isBinary(const std::string& data)
 	}
 	return false;
 }
+
+
+
+#endif

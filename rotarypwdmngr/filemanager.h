@@ -1,4 +1,6 @@
 #pragma once
+#ifndef FILE_MANAGER
+#define FILE_MANAGER
 #include "includes.h"
 class FileManager
 {
@@ -69,3 +71,5 @@ public:
 		return data;
 	}
 };
+
+#endif

@@ -1,5 +1,7 @@
 #pragma once
 
+#ifndef PASSWORD_GENERATOR
+#define PASSWORD_GENERATOR
 namespace generator {
 
 	class Password_generator {
@@ -57,3 +59,4 @@ namespace generator {
 		}
 	};
 }
+#endif

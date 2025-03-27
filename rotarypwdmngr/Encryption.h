@@ -1,4 +1,6 @@
 #pragma once
+#ifndef ENCRYPTION
+#define ENCRYPTION
 #include "includes.h"
 using std::string;
 
@@ -34,3 +36,5 @@ public:
 
 
 };
+
+#endif
