@@ -1,9 +1,7 @@
 #pragma once
 #ifndef PasswordGenerator
 #define PasswordGenerator
-namespace PasswordGenerator {
-
-	class Password_generator {
+class Password_generator {
 	public:
 		string generate_password(const uint32_t& length) {
 			m_password = std::string(' ', length);
@@ -47,5 +45,4 @@ private:
 		if (entropy_bits(m_password) < max_entropy(m_password.length()))
 			strengthen_password();
 	}
-};
 #endif
