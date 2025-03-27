@@ -15,6 +15,8 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <bit>
+#include <bitset>
 
 
 //IMGUI (TODO)
