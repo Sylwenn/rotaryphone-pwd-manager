@@ -1,16 +1,15 @@
 #pragma once
 #ifndef PasswordGenerator
 #define PasswordGenerator
-class Password_generator {
-	public:
-		string generate_password(const uint32_t& length) {
-			m_password = std::string(' ', length);
-			for (uint32_t i = 0; i < length; i++)
-				m_password[i] = ascii_pool[random_int_range()];
-			return m_password;
-		}
-
-
+class PasswordGenerator {
+public:
+	PasswordGenerator() = default;
+	string generate_password(const uint32_t& length) {
+		m_password = std::string(' ', length);
+		for (uint32_t i = 0; i < length; i++)
+			m_password[i] = ascii_pool[random_int_range()];
+		return m_password;
+	}
 private:
 	std::string m_password;
 	uint32_t m_entropy_bits;
@@ -45,4 +44,5 @@ private:
 		if (entropy_bits(m_password) < max_entropy(m_password.length()))
 			strengthen_password();
 	}
+};
 #endif
