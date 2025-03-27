@@ -1,26 +1,22 @@
 #pragma once
 #ifndef PASSWORD_GENERATOR
 #define PASSWORD_GENERATOR
+class PasswordGenerator {
+public:
+	PasswordGenerator() = default;
 
-	class Password_generator {
-	public:
-		string generate_password(const uint32_t& length) {
-			m_password = std::string(' ', length);
-			generate_password(length);
-		};
-
-		~Password_generator() = default;
-
-		std::string getPassword() {
-			return m_password;
-		}
-
-	private:
-		std::string m_password;
-		uint32_t m_entropy_bits;
-		void strengthen_password() {
-			if (entropy_bits(m_password) >= max_entropy(m_password.size())) // if the password is already strong discards the function
-				return;
+	string generate_password(const uint32_t& length) {
+		m_password = std::string(' ', length);
+		for (uint32_t i = 0; i < length; i++)
+			m_password[i] = ascii_pool[random_int_range()];
+		return m_password;
+	}
+private:
+	std::string m_password;
+	uint32_t m_entropy_bits;
+	void strengthen_password() {
+		if (entropy_bits(m_password) >= max_entropy(m_password.size())) // if the password is already strong discards the function
+			return;
 
 		Vector2<uint32_t> instruction(1, 0); // the pools to replace
 		std::vector<uint32_t> password_stats = char_stats(m_password);
