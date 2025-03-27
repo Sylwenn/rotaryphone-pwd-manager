@@ -11,4 +11,9 @@
 #include <algorithm>
 #include <cmath>
 
+
+// Custom 
+
+#include "password_generator.hpp"
+
 //IMGUI (TODO)
