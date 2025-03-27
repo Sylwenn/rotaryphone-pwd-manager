@@ -1,7 +1,6 @@
 #pragma once
-#ifndef PasswordGenerator
-#define PasswordGenerator
-namespace PasswordGenerator {
+#ifndef PASSWORD_GENERATOR
+#define PASSWORD_GENERATOR
 
 	class Password_generator {
 	public:
