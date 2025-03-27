@@ -14,6 +14,7 @@
 #include <random>
 #include <algorithm>
 #include <cmath>
+#include <limits>
 
 
 //IMGUI (TODO)
@@ -23,7 +24,7 @@
 #include "filemanager.h"
 #include "Encryption.h"
 #include "password_generator.hpp"
-
+#include "functions.h"
 //IMGUI (TODO)
 
 #endif

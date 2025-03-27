@@ -5,7 +5,7 @@
 class FileManager
 {
 public:
-	bool doesFileExists(const std::string& filename)
+	bool doesFileExist(const std::string& filename)
 	{
 		std::ifstream file(filename);
 		return file.good();
@@ -39,6 +39,48 @@ public:
 		file.write(data.c_str(), data.size());
 		file.close();
 	}
+	void writeLineByLineToFile(const std::string& filename, const std::vector<std::string>& lines) {
+		std::ofstream file;
+		if (isBinary(lines[0])) { //Binary Check
+			file.open(filename, std::ios::binary);
+		}
+		else {
+			file.open(filename);
+		}
+
+		if (!file) { //File Check
+			std::cerr << "Error opening file for writing!" << std::endl;
+			return;
+		}
+
+		for (const std::string& line : lines) { //Add to new files
+			file.write(line.c_str(), line.size()); 
+			file.put('\n');
+		}
+
+		file.close();
+	}
+
+	void writeToNextLine(const std::string& filename, const std::string& data) {
+		std::ofstream file;
+		if (isBinary(data)) {
+			file.open(filename, std::ios::binary | std::ios::app);  
+		}
+		else {
+			file.open(filename, std::ios::app);
+		}
+
+		if (!file) {
+			std::cerr << "Error opening file for writing!" << std::endl;
+			return;
+		}
+
+		file.write(data.c_str(), data.size()); 
+		file.put('\n'); 
+
+		file.close();
+	}
+
 	std::string readFromFile(const std::string& filename)
 	{
 		std::ifstream file(filename, std::ios::binary | std::ios::ate);
