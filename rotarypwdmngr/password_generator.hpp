@@ -6,21 +6,9 @@ namespace generator {
 
 	class Password_generator {
 	public:
-		Password_generator(const uint32_t& length) {
-			m_password = std::string(' ', length);
-			generate_password(length);
-		};
-
-		~Password_generator() = default;
-
 		void generate_password(const uint32_t& length) {
-			m_password = std::string(' ', length);
 			for (uint32_t i = 0; i < length; i++)
 				m_password[i] = ascii_pool[random_int_range()];
-		}
-
-		std::string getPassword() {
-			return m_password;
 		}
 
 	private:
