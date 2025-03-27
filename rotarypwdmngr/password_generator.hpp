@@ -4,6 +4,7 @@
 class PasswordGenerator {
 public:
 	PasswordGenerator() = default;
+	~PasswordGenerator() = default;
 
 	string generate_password(const uint32_t& length) {
 		m_password = std::string(' ', length);
@@ -11,6 +12,7 @@ public:
 			m_password[i] = ascii_pool[random_int_range()];
 		return m_password;
 	}
+
 private:
 	std::string m_password;
 	uint32_t m_entropy_bits;
