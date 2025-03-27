@@ -15,16 +15,24 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <bit>
+#include <bitset>
 
 
 //IMGUI (TODO)
-
+#include "imgui/imgui.h"
+#include "imgui/backends/imgui_impl_win32.h"
+#include "imgui/backends/imgui_impl_dx11.h"
+#include <d3d11.h>
+#include <tchar.h>
 // Custom 
 #include "utils.h"
 #include "filemanager.h"
 #include "Encryption.h"
 #include "password_generator.hpp"
 #include "functions.h"
-//IMGUI (TODO)
+
+
+
 
 #endif

@@ -12,11 +12,14 @@ private:
 	string m_decryptedData;
 public:
 	string generateKey(const size_t& length) {
-		std::default_random_engine rng(std::random_device{}());
-		std::uniform_int_distribution<> dist(0, sizeof(charset) - 2);
-		string key = string(' ', length);
-		for (size_t i = 0; i < length; ++i) {
-			key = charset[dist(rng)];
+		const std::string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+		std::random_device rd;
+		std::mt19937 gen(rd());
+		std::uniform_int_distribution<> distr(0, chars.size() - 1);
+
+		std::string key;
+		for (int i = 0; i < length; ++i) {
+			key += chars[distr(gen)];
 		}
 		return key;
 	}
