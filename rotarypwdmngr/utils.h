@@ -174,4 +174,17 @@ std::bitset<256> bitcastString(const std::string & str) {
 
 	return bits;
 }
+
+std::string bitsetToString(const std::bitset<256>& bits) {
+	std::string result;
+	for (size_t i = 0; i < 256 / 8; i++) {
+		char c = 0;
+		for (size_t j = 0; j < 8; j++) {
+			c |= bits[i * 8 + j] << j;
+		}
+		if (c == '\0') break; // Stop at null terminator
+		result.push_back(c);
+	}
+	return result;
+}
 #endif

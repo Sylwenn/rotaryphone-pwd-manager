@@ -1,33 +1,35 @@
 #pragma once
 #ifndef ENCRYPTION
 #define ENCRYPTION
+// #define EXTENDED_ENCRYPTION
 #include "includes.h"
 using std::string;
 
 class Encryption {
 private:
-	string m_key;
+	std::bitset<256> m_key;
 	string m_iv;
 	string m_encryptedData;
 	string m_decryptedData;
+	size_t shift_amount;
 public:
 	string generateKey(const size_t& length) {
 		std::default_random_engine rng(std::random_device{}());
 		std::uniform_int_distribution<> dist(0, sizeof(charset) - 2);
-		std::uniform_int_distribution<> dist2(0, 10);
 		string key = string(' ', length);
 		for (size_t i = 0; i < length; ++i) {
-			key = charset[dist(rng)];
+			key[i] = charset[dist(rng)];
 		}
-		
-		std::bitset<256> a = bitcastString(key);
 
-		std::cout << a << std::endl;
-		for (size_t i = 0; i < dist2(rng); i++) {
-			a = a << 1;
+		m_key = bitcastString(key);
+#ifdef EXTENDED_ENCRYPTION
+		std::uniform_int_distribution<> dist2(1, 5);
+		size_t shift_amount = dist2(rng);
+		for (size_t i = 0; i < shift_amount; i++) {
+			m_key = m_key << 1;
 		}
-		std::cout << a << std::endl;
-		return key;
+#endif
+		return bitsetToString(m_key);
 	}
 	string xorCrypt(const string& passwd, const string& key) {
 		string output = passwd;
