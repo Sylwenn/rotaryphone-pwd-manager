@@ -49,8 +49,8 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -71,6 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>..\build</OutDir>
+    <IntDir>..\x64</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>..\build</OutDir>
     <IntDir>..\x64</IntDir>
   </PropertyGroup>
@@ -140,6 +144,7 @@
   <ItemGroup>
     <ClInclude Include="Encryption.h" />
     <ClInclude Include="filemanager.h" />
+    <ClInclude Include="functions.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="password_generator.hpp" />
     <ClInclude Include="utils.h" />
