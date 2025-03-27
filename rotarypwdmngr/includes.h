@@ -2,7 +2,9 @@
 #include <iostream>
 #include <windows.h>
 #include <string>
-
+#include <fstream>
+#include <stdlib.h>
+#include <thread>
 
 //Math
 #include <vector>
@@ -13,7 +15,8 @@
 
 
 // Custom 
-
+#include "FileManager.h"
+#include "Encryption.h"
 #include "password_generator.hpp"
 
 //IMGUI (TODO)

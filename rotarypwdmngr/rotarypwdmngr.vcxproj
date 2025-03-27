@@ -131,6 +131,8 @@
     <ClCompile Include="rotarypwdmngr.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Encryption.h" />
+    <ClInclude Include="filemanager.h" />
     <ClInclude Include="includes.h" />
     <ClInclude Include="password_generator.hpp" />
   </ItemGroup>

@@ -1,0 +1,10 @@
+﻿  rotarypwdmngr.cpp
+C:\Users\sio\source\repos\rotaryphone-pwd-manager\rotarypwdmngr\password_generator.hpp(130,58): warning C4244: 'argument': conversion from 'unsigned __int64' to 'const double', possible loss of data
+  (compiling source file 'rotarypwdmngr.cpp')
+  
+C:\Users\sio\source\repos\rotaryphone-pwd-manager\rotarypwdmngr\password_generator.hpp(164,59): warning C4244: 'argument': conversion from 'unsigned __int64' to 'const double', possible loss of data
+  (compiling source file 'rotarypwdmngr.cpp')
+  
+  rotarypwdmngr.vcxproj -> C:\Users\sio\Source\Repos\rotaryphone-pwd-manager\x64\Debug\rotarypwdmngr.exe
+  'pwsh.exe' is not recognized as an internal or external command,
+  operable program or batch file.
