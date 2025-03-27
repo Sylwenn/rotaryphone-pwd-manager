@@ -1,9 +1,11 @@
 #pragma once
 #ifndef UTILS
 #define UTILS
+
 const char ascii_pool[] = "!\"#$%&\'()*+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz";
 constexpr uint32_t ascii_length = sizeof(ascii_pool) / sizeof(char);
 
+const char charset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 const char upper_pool[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const char lower_pool[] = "abcdefghijklmnopqrstuvwxyz";
 const char digit_pool[] = "0123456789";

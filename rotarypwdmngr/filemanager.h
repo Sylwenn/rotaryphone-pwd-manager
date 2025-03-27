@@ -2,26 +2,22 @@
 #ifndef FILE_MANAGER
 #define FILE_MANAGER
 #include "includes.h"
-class FileManager
-{
+class FileManager {
 public:
 	bool doesFileExist(const std::string& filename)
 	{
 		std::ifstream file(filename);
 		return file.good();
 	}
-	void createFile(std::string filename)
-	{
+	void createFile(std::string filename) {
 		std::ofstream file;
 		file.open(filename);
 		file.close();
 	}
-	void deleteFile(std::string filename)
-	{
+	void deleteFile(std::string filename) {
 		remove(filename.c_str());
 	}
-	void writeToFile(const std::string& filename, const std::string& data)
-	{
+	void writeToFile(const std::string& filename, const std::string& data) {
 		std::ofstream file;
 
 		if (isBinary(data)) {
@@ -80,7 +76,6 @@ public:
 
 		file.close();
 	}
-
 	std::string readFromFile(const std::string& filename)
 	{
 		std::ifstream file(filename, std::ios::binary | std::ios::ate);
@@ -97,21 +92,18 @@ public:
 
 		if (isBinary(content)) {
 			//std::cout << "The file is binary." << std::endl;
-		}
-		else {
+		} else {
 			//std::cout << "The file is text." << std::endl;
 		}
 
 		return content;
 	}
-	std::vector<std::string> readFromFileLineByLine(std::string filename)
-	{
+	std::vector<std::string> readFromFileLineByLine(std::string filename) {
 		std::ifstream file;
 		file.open(filename);
 		std::vector<std::string> data;
 		std::string line;
-		while (std::getline(file, line))
-		{
+		while (std::getline(file, line)) {
 			data.push_back(line);
 		}
 		file.close();
