@@ -6,9 +6,6 @@ static IDXGISwapChain* g_pSwapChain = nullptr;
 static bool                     g_SwapChainOccluded = false;
 static UINT                     g_ResizeWidth = 0, g_ResizeHeight = 0;
 static ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
-
-static char websiteInput[128] = "";   // Input buffer for the new website
-static char passwordInput[128] = "";  // Input buffer for the new password
 int selectedIndex = -1;
 
 // Forward declarations of helper functions
@@ -47,7 +44,8 @@ int main()
    //ImGui_ImplWin32_EnableDpiAwareness();
 	WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"Rotary Password Manager", nullptr };
 	::RegisterClassExW(&wc);
-	HWND hwnd = ::CreateWindowEx(WS_EX_LAYERED | WS_EX_TOPMOST | WS_EX_NOACTIVATE, _T("Rotary Password Manager"), NULL, WS_POPUP, 0, 0, 1920, 1080, NULL, NULL, wc.hInstance, NULL);
+	HWND hwnd = ::CreateWindowEx(WS_EX_LAYERED | WS_EX_TOPMOST, _T("Rotary Password Manager"), NULL, WS_POPUP, 0, 0, 1920, 1080, NULL, NULL, wc.hInstance, NULL);
+	//HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"Rotary Password Manager", WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
 	SetLayeredWindowAttributes(hwnd, RGB(0, 0, 0), 0, LWA_COLORKEY);
 	// Initialize Direct3D
 	if (!CreateDeviceD3D(hwnd))
@@ -67,6 +65,7 @@ int main()
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.WantCaptureKeyboard = true;
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
@@ -75,6 +74,7 @@ int main()
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
+
 
 	// Load Fonts
 	// - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
@@ -139,10 +139,7 @@ int main()
 			static float f = 0.0f;
 			static int counter = 0;
 
-			ImGui::Begin("Rotary Password Manager");                          // Create a window called "Hello, world!" and append into it.
-
-			ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-
+			ImGui::Begin("Rotary Password Manager");                         
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 			ImGui::Separator();
 			ImGui::Columns(2, nullptr, false);
@@ -156,12 +153,27 @@ int main()
 				ImGui::NextColumn();
 				if (selectedIndex >= 0) {
 					ImGui::Text("Password for %s:", passwordelements[selectedIndex].c_str());
-					ImGui::Text("%s", decryptPassword(selectedIndex).c_str());  // Display the password of the selected website
+					ImGui::Text("%s", decryptPassword(selectedIndex).c_str()); 
 				}
 				else {
 					ImGui::Text("Select a website to see the password.");
 				}
+				static char websiteInput[128] = "";   // Input buffer for the new website
+				static char passwordInput[128] = "";  // Input buffer for the new password
 
+				ImGui::InputText("Website", websiteInput, IM_ARRAYSIZE(websiteInput));
+				ImGui::InputText("Password", passwordInput, IM_ARRAYSIZE(passwordInput));
+				if (ImGui::Button("Add Password")) {
+					if (strlen(websiteInput) == 0 || strlen(passwordInput) == 0) {
+						printf("Error: Website or Password is empty!\n"); 
+					}
+					else {
+						addPassword(websiteInput, passwordInput);
+						printf("Added: %s -> %s\n", websiteInput, passwordInput);
+						websiteInput[0] = '\0';
+						passwordInput[0] = '\0';
+					}
+				}
 			}
 			ImGui::End();
 		}
@@ -276,5 +288,6 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		::PostQuitMessage(0);
 		return 0;
 	}
+
 	return ::DefWindowProcW(hWnd, msg, wParam, lParam);
 }
