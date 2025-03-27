@@ -5,6 +5,11 @@
 class FileManager
 {
 public:
+	bool doesFileExists(const std::string& filename)
+	{
+		std::ifstream file(filename);
+		return file.good();
+	}
 	void createFile(std::string filename)
 	{
 		std::ofstream file;
@@ -49,10 +54,10 @@ public:
 		file.close();
 
 		if (isBinary(content)) {
-			std::cout << "The file is binary." << std::endl;
+			//std::cout << "The file is binary." << std::endl;
 		}
 		else {
-			std::cout << "The file is text." << std::endl;
+			//std::cout << "The file is text." << std::endl;
 		}
 
 		return content;

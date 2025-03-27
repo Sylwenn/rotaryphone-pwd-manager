@@ -1,13 +1,22 @@
 #include "includes.h"
 Encryption enc;
 FileManager file;
+PasswordGenerator passgen;
 using std::string;
-
+string key;
 void DebugFunc()
 {
 
-	string password = "Testing123 testing123";
-	string key = enc.generateKey(password.length());
+	if (file.doesFileExists("keys.txt"))
+	{
+		key = file.readFromFile("keys.txt");
+	}else 
+	{
+		key = enc.generateKey(32);
+		file.createFile("keys.txt");
+		file.writeToFile("keys.txt", key);
+	}
+	string password = passgen.generate_password(16);
 	string encrypted = enc.xorCrypt(password, key);
 	string decrypted = enc.xorCrypt(encrypted, key);
 	std::cout << "Original " << password << std::endl;
