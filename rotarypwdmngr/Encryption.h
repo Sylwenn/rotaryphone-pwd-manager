@@ -1,7 +1,7 @@
 #pragma once
 #ifndef ENCRYPTION
 #define ENCRYPTION
-// #define EXTENDED_ENCRYPTION
+#define EXTENDED_ENCRYPTION
 #include "includes.h"
 using std::string;
 
@@ -20,14 +20,13 @@ public:
 		for (size_t i = 0; i < length; ++i) {
 			key[i] = charset[dist(rng)];
 		}
-
+		
 		m_key = bitcastString(key);
+		std::cout << bitsetToString(m_key);
 #ifdef EXTENDED_ENCRYPTION
 		std::uniform_int_distribution<> dist2(1, 5);
-		size_t shift_amount = dist2(rng);
-		for (size_t i = 0; i < shift_amount; i++) {
-			m_key = m_key << 1;
-		}
+		shift_amount = dist2(rng);
+		m_key = m_key << shift_amount;
 #endif
 		return bitsetToString(m_key);
 	}
@@ -40,6 +39,9 @@ public:
 		return output;
 	}
 
+	const size_t getShiftAmount() const{
+		return shift_amount;
+	}
 
 };
 

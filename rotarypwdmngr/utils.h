@@ -163,7 +163,7 @@ bool isBinary(const std::string& data)
 	return false;
 }
 
-std::bitset<256> bitcastString(const std::string & str) {
+std::bitset<256> bitcastString(const std::string& str) {
 	std::bitset<256> bits;
 
 	for (size_t i = 0; i < str.size() && i < 32; i++) {
@@ -186,5 +186,12 @@ std::string bitsetToString(const std::bitset<256>& bits) {
 		result.push_back(c);
 	}
 	return result;
+}
+
+std::string shiftDecrypt(const std::string& shiftCrypted, const size_t& amount) {
+	std::bitset<256> bits = bitcastString(shiftCrypted);
+	bits = bits >> amount;
+	std::string shiftDecrypted = bitsetToString(bits);
+	return shiftDecrypted;
 }
 #endif
