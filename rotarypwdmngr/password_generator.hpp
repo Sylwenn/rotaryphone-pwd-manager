@@ -1,13 +1,17 @@
 #pragma once
+#ifndef PasswordGenerator
+#define PasswordGenerator
+namespace PasswordGenerator {
 
-class PasswordGenerator {
-public:
-	string generate_password(const uint32_t& length) {
-		m_password = std::string(' ', length);
-		for (uint32_t i = 0; i < length; i++)
-			m_password[i] = ascii_pool[random_int_range()];
-		return m_password;
-	}
+	class Password_generator {
+	public:
+		string generate_password(const uint32_t& length) {
+			m_password = std::string(' ', length);
+			for (uint32_t i = 0; i < length; i++)
+				m_password[i] = ascii_pool[random_int_range()];
+			return m_password;
+		}
+
 
 private:
 	std::string m_password;
@@ -44,3 +48,4 @@ private:
 			strengthen_password();
 	}
 };
+#endif

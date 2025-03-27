@@ -1,4 +1,6 @@
 #pragma once
+#ifndef INCLUDES
+#define INCLUDES
 #include <iostream>
 #include <windows.h>
 #include <string>
@@ -23,3 +25,5 @@
 #include "password_generator.hpp"
 
 //IMGUI (TODO)
+
+#endif
