@@ -14,10 +14,9 @@ void CleanupDeviceD3D();
 void CreateRenderTarget();
 void CleanupRenderTarget();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-string HandleWebsiteClick(int index)
+string HandleWebsiteClick(int index, std::vector<std::string> passwordelements)
 {
 	selectedIndex = index;
-	std::vector<std::string> passwordelements = loadPasswordElementsToMemory();
 	std::cout << "Website clicked at index: " << index << ", Name: " << passwordelements[index] << std::endl;
 	string decryptedpassword = decryptPassword(index);
 	std::cout << "Decrypted password: " << decryptedpassword << std::endl;
@@ -94,6 +93,7 @@ int main()
 
 	// menu state
 	bool show_demo_window = true;
+	bool show_main_window = true;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	// Main loop
@@ -138,43 +138,57 @@ int main()
 		{
 			static float f = 0.0f;
 			static int counter = 0;
-
-			ImGui::Begin("Rotary Password Manager");                         
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-			ImGui::Separator();
-			ImGui::Columns(2, nullptr, false);
-			ImGui::SetColumnOffset(1, 200);
-			{
-				for (size_t i = 0; i < passwordelements.size(); ++i) {
-					if (ImGui::Selectable(passwordelements[i].c_str())) {
-					HandleWebsiteClick(i);
+			if (show_main_window) {
+				if (!ImGui::Begin("Rotary Password Manager", &show_main_window, ImGuiWindowFlags_NoCollapse)) {
+					ImGui::End();
+				}
+				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+				ImGui::Separator();
+				ImGui::Columns(2, nullptr, false);
+				ImGui::SetColumnOffset(1, 200);
+				{
+					std::vector<std::string> passwordelements = loadPasswordElementsToMemory();
+					for (size_t i = 0; i < passwordelements.size(); ++i) {
+						if (ImGui::Selectable(passwordelements[i].c_str())) {
+							HandleWebsiteClick(i, passwordelements);
+						}
 					}
-				}
-				ImGui::NextColumn();
-				if (selectedIndex >= 0) {
-					ImGui::Text("Password for %s:", passwordelements[selectedIndex].c_str());
-					ImGui::Text("%s", decryptPassword(selectedIndex).c_str()); 
-				}
-				else {
-					ImGui::Text("Select a website to see the password.");
-				}
-				static char websiteInput[128] = "";   // Input buffer for the new website
-				static char passwordInput[128] = "";  // Input buffer for the new password
-
-				ImGui::InputText("Website", websiteInput, IM_ARRAYSIZE(websiteInput));
-				ImGui::InputText("Password", passwordInput, IM_ARRAYSIZE(passwordInput));
-				if (ImGui::Button("Add Password")) {
-					if (strlen(websiteInput) == 0 || strlen(passwordInput) == 0) {
-						printf("Error: Website or Password is empty!\n"); 
+					ImGui::NextColumn();
+					if (selectedIndex >= 0) {
+						ImGui::Text("Password for %s:", passwordelements[selectedIndex].c_str());
+						ImGui::Text("%s", decryptPassword(selectedIndex).c_str());
+						if (ImGui::Button("Delete Password")) {
+							deletePassword("passwordelements.txt", selectedIndex);
+							deletePassword("passwords.txt", selectedIndex);
+						}
 					}
 					else {
-						addPassword(websiteInput, passwordInput);
-						printf("Added: %s -> %s\n", websiteInput, passwordInput);
-						websiteInput[0] = '\0';
-						passwordInput[0] = '\0';
+						ImGui::Text("Select a website to see the password.");
+					}
+					static char websiteInput[128] = "";   // Input buffer for the new website
+					static char passwordInput[128] = "";  // Input buffer for the new password
+
+					ImGui::InputText("Website", websiteInput, IM_ARRAYSIZE(websiteInput));
+					ImGui::InputText("Password", passwordInput, IM_ARRAYSIZE(passwordInput));
+					if (ImGui::Button("Add Password")) {
+						if (strlen(websiteInput) == 0 || strlen(passwordInput) == 0) {
+							printf("Error: Website or Password is empty!\n");
+						}
+						else {
+							addPassword(websiteInput, passwordInput);
+							printf("Added: %s -> %s\n", websiteInput, passwordInput);
+							websiteInput[0] = '\0';
+							passwordInput[0] = '\0';
+						}
 					}
 				}
+
 			}
+			else
+			{
+					PostQuitMessage(0);  
+			}
+			
 			ImGui::End();
 		}
 		// Rendering

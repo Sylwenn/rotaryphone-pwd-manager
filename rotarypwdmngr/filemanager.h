@@ -109,6 +109,36 @@ public:
 		file.close();
 		return data;
 	}
+	void deleteSpecificLine(const std::string& filename, int lineToDelete) {
+		std::vector<std::string> lines;
+		std::ifstream file(filename);
+		std::string line;
+		int currentLine = 0;
+		while (std::getline(file, line)) {
+			if (currentLine != lineToDelete) {
+				lines.push_back(line);
+			}
+			currentLine++;
+		}
+		file.close();
+
+		if (lineToDelete < 0 || lineToDelete >= static_cast<int>(lines.size())) {
+			std::cerr << "Error: Invalid line number!" << std::endl;
+			return;
+		}
+		std::ofstream outFile(filename);
+		if (!outFile) {
+			std::cerr << "Error opening file for writing!" << std::endl;
+			return;
+		}
+
+		for (const auto& l : lines) {
+			outFile << l << "\n";
+		}
+		outFile.close();
+
+		std::cout << "Line " << lineToDelete << " deleted successfully." << std::endl;
+	}
 };
 
 #endif
