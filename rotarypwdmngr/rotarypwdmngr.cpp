@@ -203,7 +203,15 @@ int main()
 						if (ImGui::BeginTabItem("Generator"))
 						{
 							centerNextImGui();
-							ImGui::BeginChild("PasswordListMain", ImVec2(800, 400), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+							ImGui::BeginChild("GeneratorMain", ImVec2(800, 400), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+							ImGui::Text("TODO");
+							ImGui::EndChild();
+							ImGui::EndTabItem();
+						}
+						if (ImGui::BeginTabItem("Settings"))
+						{
+							centerNextImGui();
+							ImGui::BeginChild("SettingsMain", ImVec2(800, 400), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 							ImGui::Text("TODO");
 							ImGui::EndChild();
 							ImGui::EndTabItem();
