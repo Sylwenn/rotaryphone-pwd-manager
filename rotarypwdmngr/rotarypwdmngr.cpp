@@ -6,9 +6,6 @@ static IDXGISwapChain* g_pSwapChain = nullptr;
 static bool                     g_SwapChainOccluded = false;
 static UINT                     g_ResizeWidth = 0, g_ResizeHeight = 0;
 static ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
-
-static char websiteInput[128] = "";   // Input buffer for the new website
-static char passwordInput[128] = "";  // Input buffer for the new password
 int selectedIndex = -1;
 
 // Forward declarations of helper functions
@@ -17,10 +14,9 @@ void CleanupDeviceD3D();
 void CreateRenderTarget();
 void CleanupRenderTarget();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-string HandleWebsiteClick(int index)
+string HandleWebsiteClick(int index, std::vector<std::string> passwordelements)
 {
 	selectedIndex = index;
-	std::vector<std::string> passwordelements = loadPasswordElementsToMemory();
 	std::cout << "Website clicked at index: " << index << ", Name: " << passwordelements[index] << std::endl;
 	string decryptedpassword = decryptPassword(index);
 	std::cout << "Decrypted password: " << decryptedpassword << std::endl;
@@ -47,7 +43,8 @@ int main()
    //ImGui_ImplWin32_EnableDpiAwareness();
 	WNDCLASSEXW wc = { sizeof(wc), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"Rotary Password Manager", nullptr };
 	::RegisterClassExW(&wc);
-	HWND hwnd = ::CreateWindowEx(WS_EX_LAYERED | WS_EX_TOPMOST | WS_EX_NOACTIVATE, _T("Rotary Password Manager"), NULL, WS_POPUP, 0, 0, 1920, 1080, NULL, NULL, wc.hInstance, NULL);
+	HWND hwnd = ::CreateWindowEx(WS_EX_LAYERED | WS_EX_TOPMOST, _T("Rotary Password Manager"), NULL, WS_POPUP, 0, 0, 1920, 1080, NULL, NULL, wc.hInstance, NULL);
+	//HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"Rotary Password Manager", WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
 	SetLayeredWindowAttributes(hwnd, RGB(0, 0, 0), 0, LWA_COLORKEY);
 	// Initialize Direct3D
 	if (!CreateDeviceD3D(hwnd))
@@ -67,6 +64,7 @@ int main()
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.WantCaptureKeyboard = true;
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
@@ -75,6 +73,7 @@ int main()
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(hwnd);
 	ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
+
 
 	// Load Fonts
 	// - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
@@ -94,6 +93,7 @@ int main()
 
 	// menu state
 	bool show_demo_window = true;
+	bool show_main_window = true;
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	// Main loop
@@ -139,31 +139,93 @@ int main()
 			static float f = 0.0f;
 			static int counter = 0;
 
-			ImGui::Begin("Rotary Password Manager");                          // Create a window called "Hello, world!" and append into it.
+			if (show_main_window) {
+				ImGui::SetNextWindowSize(ImVec2(815, 0));
+				ImGui::Begin("Rotary Password Manager", &show_main_window, ImGuiWindowFlags_NoCollapse);
+				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+				ImGui::Separator();
+				ImGui::Columns(1);
+				if (ImGui::BeginTabBar("#tabs")) {
+					{
+						if (ImGui::BeginTabItem("Passwords")) {
+							{
+								centerNextImGui();
+								ImGui::BeginChild("PasswordListMain", ImVec2(800, 400), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+								ImGui::Columns(2, "Password Collumns", false);
+								ImGui::SetColumnOffset(1, 210);
+								ImGui::BeginChild("PasswordListLeft", ImVec2(200, 350), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+								static int item_current3 = 0;
+								std::vector<std::string> passwordelements = loadPasswordElementsToMemory();
+								std::vector<const char*> items;
+								for (const std::string& str : passwordelements) {
+									items.push_back(str.c_str());
+								}
+								ImGui::PushItemWidth(150);
+								if (ImGui::ListBox("##", &item_current3, items.data(), static_cast<int>(items.size()), 10)) {
+									HandleWebsiteClick(item_current3, passwordelements);
+								}
+								ImGui::EndChild();
+								ImGui::NextColumn();
+								ImGui::BeginChild("PasswordListRight", ImVec2(400, 200), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+								if (selectedIndex >= 0) {
+									ImGui::Text("Password for %s:", passwordelements[selectedIndex].c_str());
+									ImGui::Text("%s", decryptPassword(selectedIndex).c_str());
+									if (ImGui::Button("Delete Password")) {
+										deletePassword("passwordelements.txt", selectedIndex);
+										deletePassword("passwords.txt", selectedIndex);
+									}
+								}
+								else {
+									ImGui::Text("Select a website to see the password.");
+								}
+								static char websiteInput[128] = "";   // Input buffer for the new website
+								static char passwordInput[128] = "";  // Input buffer for the new password
 
-			ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
-
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-			ImGui::Separator();
-			ImGui::Columns(2, nullptr, false);
-			ImGui::SetColumnOffset(1, 200);
-			{
-				for (size_t i = 0; i < passwordelements.size(); ++i) {
-					if (ImGui::Selectable(passwordelements[i].c_str())) {
-					HandleWebsiteClick(i);
+								ImGui::InputText("URL", websiteInput, IM_ARRAYSIZE(websiteInput));
+								ImGui::InputText("PASS", passwordInput, IM_ARRAYSIZE(passwordInput));
+								if (ImGui::Button("Add Password")) {
+									if (strlen(websiteInput) == 0 || strlen(passwordInput) == 0) {
+										printf("Error: Website or Password is empty!\n");
+									}
+									else {
+										addPassword(websiteInput, passwordInput);
+										printf("Added: %s -> %s\n", websiteInput, passwordInput);
+										websiteInput[0] = '\0';
+										passwordInput[0] = '\0';
+									}
+								}
+							}
+							ImGui::EndChild();
+							ImGui::EndChild();
+							ImGui::Columns(1);
+							ImGui::EndTabItem();
+						}
+						if (ImGui::BeginTabItem("Generator"))
+						{
+							centerNextImGui();
+							ImGui::BeginChild("GeneratorMain", ImVec2(800, 400), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+							ImGui::Text("TODO");
+							ImGui::EndChild();
+							ImGui::EndTabItem();
+						}
+						if (ImGui::BeginTabItem("Settings"))
+						{
+							centerNextImGui();
+							ImGui::BeginChild("SettingsMain", ImVec2(800, 400), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+							ImGui::Text("TODO");
+							ImGui::EndChild();
+							ImGui::EndTabItem();
+						}
 					}
+					ImGui::EndTabBar();
 				}
-				ImGui::NextColumn();
-				if (selectedIndex >= 0) {
-					ImGui::Text("Password for %s:", passwordelements[selectedIndex].c_str());
-					ImGui::Text("%s", decryptPassword(selectedIndex).c_str());  // Display the password of the selected website
-				}
-				else {
-					ImGui::Text("Select a website to see the password.");
-				}
-
+			}
+			else
+			{
+				PostQuitMessage(0);
 			}
 			ImGui::End();
+
 		}
 		// Rendering
 		ImGui::Render();
@@ -276,5 +338,6 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		::PostQuitMessage(0);
 		return 0;
 	}
+
 	return ::DefWindowProcW(hWnd, msg, wParam, lParam);
 }

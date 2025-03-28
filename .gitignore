@@ -217,6 +217,8 @@ DocProject/Help/html
 # Click-Once directory
 publish/
 x64/
+rotarypwdmngr/*.txt
+rotarypwdmngr/*.ini
 build/
 # Publish Web Output
 *.[Pp]ublish.xml

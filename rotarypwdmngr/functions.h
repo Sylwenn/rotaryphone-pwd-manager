@@ -10,7 +10,11 @@ string key;
 int KEYSIZE = 32;
 
 
-
+void centerNextImGui() {
+	float availableWidth = ImGui::GetContentRegionAvail().x;
+	float posX = (availableWidth - 800) * 0.5f;
+	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + posX);
+}
 void getValidIndexInput(int& input, int min, int max) {
 	while (true) {
 		std::cout << "Enter the website number between " << min << " and " << max << ": ";
@@ -43,8 +47,7 @@ void getNonEmptyInput(std::string& input, const std::string& prompt) {
 		std::cout << "Input cannot be empty! Please try again.\n";
 	}
 }
-std::vector<std::string> loadKeysToMemory()
-{
+std::vector<std::string> loadKeysToMemory(){
 	std::vector<std::string> keys = file.readFromFileLineByLine("keys.txt");
 
 	/*std::cout << "Keys from file:" << std::endl;
@@ -55,8 +58,7 @@ std::vector<std::string> loadKeysToMemory()
 	return keys;
 }
 
-std::vector<std::string> loadPasswordsToMemory()
-{
+std::vector<std::string> loadPasswordsToMemory(){
 	std::vector<std::string> passwords = file.readFromFileLineByLine("passwords.txt");
 
 	/*std::cout << "Passwords from file:" << std::endl;
@@ -66,8 +68,7 @@ std::vector<std::string> loadPasswordsToMemory()
 
 	return passwords;
 }
-std::vector<std::string> loadPasswordElementsToMemory()
-{
+std::vector<std::string> loadPasswordElementsToMemory(){
 	std::vector<std::string> passwordelements = file.readFromFileLineByLine("passwordelements.txt");
 
 	/*std::cout << "Passwords from file:" << std::endl;
@@ -78,16 +79,17 @@ std::vector<std::string> loadPasswordElementsToMemory()
 	return passwordelements;
 }
 
-void addPassword(string passwordelements, string password)
-{
+void addPassword(string passwordelements, string password){
 	std::vector<std::string> keys = loadKeysToMemory();
 	string encryptedpass = enc.xorCrypt(password, keys[0]);
 	file.writeToNextLine("passwords.txt", encryptedpass);
 	file.writeToNextLine("passwordelements.txt", passwordelements);
 }
+void deletePassword(string filename, int lineToDelete) {
+	file.deleteSpecificLine(filename, lineToDelete);
+}
 
-string decryptPassword(int line)
-{
+string decryptPassword(int line){
 	std::vector<std::string> keys = loadKeysToMemory();
 	std::vector<std::string> passwords = loadPasswordsToMemory();
 	string decryptedpassword = enc.xorCrypt(passwords[line], keys[0]);
@@ -95,8 +97,7 @@ string decryptPassword(int line)
 
 }
 
-void getWebsites()
-{
+void getWebsites(){
 	std::vector<std::string> passwords = loadPasswordsToMemory();
 	std::vector<std::string> passwordelements = loadPasswordElementsToMemory();
 	std::cout << "Websites You Saved:" << std::endl;
@@ -104,19 +105,8 @@ void getWebsites()
 		std::cout << "[" << i + 1 << "]: " << passwordelements[i] << std::endl;
 	}
 }
-void decryptSpecificPassword()
-{
-	std::vector<std::string> passwords = loadPasswordsToMemory();
-	std::vector<std::string> passwordelements = loadPasswordElementsToMemory();
-	int index;
-	getValidIndexInput(index, 1, passwordelements.size());
-	string decryptedpassword = decryptPassword(index - 1);
-	std::cout << "Password for " << passwordelements[index - 1] << " is: " << decryptedpassword << std::endl;
-}
 
-
-void initChecks()
-{
+void initChecks(){
 
 	if (file.doesFileExist("keys.txt")) {
 		key = file.readFromFile("keys.txt");
@@ -137,9 +127,6 @@ void initChecks()
 	}
 	if (!file.doesFileExist("passwordelements.txt")) {
 		file.createFile("passwordelements.txt");
-		addPassword("Test1", "Pass1");
-		addPassword("Test2", "Pass2");
-		addPassword("Test3", "Pass3");
 	}
 
 }
