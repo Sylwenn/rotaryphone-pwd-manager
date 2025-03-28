@@ -13,7 +13,7 @@ bool CreateDeviceD3D(HWND hWnd);
 void CleanupDeviceD3D();
 void CreateRenderTarget();
 void CleanupRenderTarget();
-LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);	
+LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 string HandleWebsiteClick(int index, std::vector<std::string> passwordelements)
 {
 	selectedIndex = index;
@@ -138,58 +138,86 @@ int main()
 		{
 			static float f = 0.0f;
 			static int counter = 0;
+
 			if (show_main_window) {
-				if (!ImGui::Begin("Rotary Password Manager", &show_main_window, ImGuiWindowFlags_NoCollapse)) {
-					ImGui::End();
-				}
+				ImGui::SetNextWindowSize(ImVec2(815, 0));
+				ImGui::Begin("Rotary Password Manager", &show_main_window, ImGuiWindowFlags_NoCollapse);
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
 				ImGui::Separator();
-				ImGui::Columns(2, nullptr, false);
-				ImGui::SetColumnOffset(1, 200);
-				{
-					std::vector<std::string> passwordelements = loadPasswordElementsToMemory();
-					for (size_t i = 0; i < passwordelements.size(); ++i) {
-						if (ImGui::Selectable(passwordelements[i].c_str())) {
-							HandleWebsiteClick(i, passwordelements);
-						}
-					}
-					ImGui::NextColumn();
-					if (selectedIndex >= 0) {
-						ImGui::Text("Password for %s:", passwordelements[selectedIndex].c_str());
-						ImGui::Text("%s", decryptPassword(selectedIndex).c_str());
-						if (ImGui::Button("Delete Password")) {
-							deletePassword("passwordelements.txt", selectedIndex);
-							deletePassword("passwords.txt", selectedIndex);
-						}
-					}
-					else {
-						ImGui::Text("Select a website to see the password.");
-					}
-					static char websiteInput[128] = "";   // Input buffer for the new website
-					static char passwordInput[128] = "";  // Input buffer for the new password
+				ImGui::Columns(1);
+				if (ImGui::BeginTabBar("#tabs")) {
+					{
+						if (ImGui::BeginTabItem("Passwords")) {
+							{
+								centerNextImGui();
+								ImGui::BeginChild("PasswordListMain", ImVec2(800, 400), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+								ImGui::Columns(2, "Password Collumns", false);
+								ImGui::SetColumnOffset(1, 210);
+								ImGui::BeginChild("PasswordListLeft", ImVec2(200, 350), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+								static int item_current3 = 0;
+								std::vector<std::string> passwordelements = loadPasswordElementsToMemory();
+								std::vector<const char*> items;
+								for (const std::string& str : passwordelements) {
+									items.push_back(str.c_str());
+								}
+								ImGui::PushItemWidth(150);
+								if (ImGui::ListBox("##", &item_current3, items.data(), static_cast<int>(items.size()), 10)) {
+									HandleWebsiteClick(item_current3, passwordelements);
+								}
+								ImGui::EndChild();
+								ImGui::NextColumn();
+								ImGui::BeginChild("PasswordListRight", ImVec2(400, 200), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+								if (selectedIndex >= 0) {
+									ImGui::Text("Password for %s:", passwordelements[selectedIndex].c_str());
+									ImGui::Text("%s", decryptPassword(selectedIndex).c_str());
+									if (ImGui::Button("Delete Password")) {
+										deletePassword("passwordelements.txt", selectedIndex);
+										deletePassword("passwords.txt", selectedIndex);
+									}
+								}
+								else {
+									ImGui::Text("Select a website to see the password.");
+								}
+								static char websiteInput[128] = "";   // Input buffer for the new website
+								static char passwordInput[128] = "";  // Input buffer for the new password
 
-					ImGui::InputText("Website", websiteInput, IM_ARRAYSIZE(websiteInput));
-					ImGui::InputText("Password", passwordInput, IM_ARRAYSIZE(passwordInput));
-					if (ImGui::Button("Add Password")) {
-						if (strlen(websiteInput) == 0 || strlen(passwordInput) == 0) {
-							printf("Error: Website or Password is empty!\n");
+								ImGui::InputText("URL", websiteInput, IM_ARRAYSIZE(websiteInput));
+								ImGui::InputText("PASS", passwordInput, IM_ARRAYSIZE(passwordInput));
+								if (ImGui::Button("Add Password")) {
+									if (strlen(websiteInput) == 0 || strlen(passwordInput) == 0) {
+										printf("Error: Website or Password is empty!\n");
+									}
+									else {
+										addPassword(websiteInput, passwordInput);
+										printf("Added: %s -> %s\n", websiteInput, passwordInput);
+										websiteInput[0] = '\0';
+										passwordInput[0] = '\0';
+									}
+								}
+							}
+							ImGui::EndChild();
+							ImGui::EndChild();
+							ImGui::Columns(1);
+							ImGui::EndTabItem();
 						}
-						else {
-							addPassword(websiteInput, passwordInput);
-							printf("Added: %s -> %s\n", websiteInput, passwordInput);
-							websiteInput[0] = '\0';
-							passwordInput[0] = '\0';
+						if (ImGui::BeginTabItem("Generator"))
+						{
+							centerNextImGui();
+							ImGui::BeginChild("PasswordListMain", ImVec2(800, 400), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+							ImGui::Text("TODO");
+							ImGui::EndChild();
+							ImGui::EndTabItem();
 						}
 					}
+					ImGui::EndTabBar();
 				}
-
 			}
 			else
 			{
-					PostQuitMessage(0);  
+				PostQuitMessage(0);
 			}
-			
 			ImGui::End();
+
 		}
 		// Rendering
 		ImGui::Render();

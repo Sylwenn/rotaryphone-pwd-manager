@@ -10,7 +10,11 @@ string key;
 int KEYSIZE = 32;
 
 
-
+void centerNextImGui() {
+	float availableWidth = ImGui::GetContentRegionAvail().x;
+	float posX = (availableWidth - 800) * 0.5f;
+	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + posX);
+}
 void getValidIndexInput(int& input, int min, int max) {
 	while (true) {
 		std::cout << "Enter the website number between " << min << " and " << max << ": ";
