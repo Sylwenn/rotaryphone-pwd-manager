@@ -8,5 +8,5 @@
 * Easy to use GUI
 
 
-##KNOWN BUGS
-*Last password in the list cannot be deleted
+## KNOWN BUGS
+* Last password in the list cannot be deleted
