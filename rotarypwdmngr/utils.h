@@ -3,7 +3,7 @@
 #define UTILS
 
 static const char* ascii_pool = "!#$%&()*+,-./123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz";
-static uint32_t ascii_length = (std::string(ascii_pool).size());
+static size_t ascii_length = (std::string(ascii_pool).size());
 
 const char charset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 const char upper_pool[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -148,7 +148,7 @@ void remove_adjacent_duplicates(std::string& str) {
 	if (has_adjacent_duplicates(str)) {
 		for (size_t i = 1; i < str.size() - 1; i++) {
 			while (str[i] == str[i + 1] || str[i] == str[i - 1])
-				str[i] = ascii_pool[random_int_range()];
+				str[i + 1] = ascii_pool[random_int_range()];
 		}
 	}
 }

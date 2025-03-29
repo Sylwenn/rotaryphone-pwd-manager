@@ -7,9 +7,12 @@ static bool                     g_SwapChainOccluded = false;
 static UINT                     g_ResizeWidth = 0, g_ResizeHeight = 0;
 static ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
 int selectedIndex = -1;
-static std::string password;
-static const char* output = nullptr;
+
+static std::string password, new_password;
+static const char* c_password = nullptr, *c_new_password = nullptr; // c_str of password for imgui
 static int passwordLength;
+
+static char* input_password = new char[64](' ');
 // Forward declarations of helper functions
 bool CreateDeviceD3D(HWND hWnd);
 void CleanupDeviceD3D();
@@ -212,14 +215,14 @@ int main()
 
 							if (ImGui::Button("Generate")) {
 								password = generator.generate_password(passwordLength);
-								output = password.c_str();
-								std::cout << "Generated: " << output << std::endl;
+								c_password = password.c_str();
+								// std::cout << "Generated: " << c_password << std::endl;
 							}
 
 							if (password.empty() != true) {
-								ImGui::Text(output);
+								ImGui::Text(c_password);
 								if (ImGui::Button("Copy to Clipboard")) {
-									ImGui::SetClipboardText(output);
+									ImGui::SetClipboardText(c_password);
 								}
 							}
 							ImGui::EndTabItem();
@@ -238,8 +241,18 @@ int main()
 							centerNextImGui();
 							ImGui::BeginChild("SettingsMain", ImVec2(800, 400), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 							ImGui::Text("Password Strenghtener");
-							
-							ImGui::Text("TODO");
+
+							ImGui::InputText("Password", input_password, 64 * sizeof(char));
+							if (ImGui::Button("Strenghten")) {
+								new_password = std::string(input_password);
+								strengthen_password(new_password);
+								c_new_password = new_password.c_str();
+								std::cout << new_password << std::endl;
+								
+							}
+							if (c_new_password != nullptr) {
+								ImGui::Text(c_new_password);
+							}
 							ImGui::EndChild();
 							ImGui::EndTabItem();
 						}

@@ -9,14 +9,12 @@ class Encryption {
 private:
 	std::bitset<256> m_key;
 	string m_iv;
-	string m_encryptedData;
-	string m_decryptedData;
-	size_t shift_amount;
+	size_t shift_amount = 0;
 public:
 	string generateKey(const size_t& length) {
 		std::default_random_engine rng(std::random_device{}());
 		std::uniform_int_distribution<> dist(0, sizeof(charset) - 2);
-		string key = string(' ', length);
+		string key = string(length, ' ');
 		for (size_t i = 0; i < length; ++i) {
 			key[i] = charset[dist(rng)];
 		}
