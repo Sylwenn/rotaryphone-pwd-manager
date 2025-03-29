@@ -6,16 +6,16 @@ public:
 	PasswordGenerator() = default;
 	~PasswordGenerator() = default;
 
-	string generate_password(const uint32_t& length) {
-		m_password = std::string(' ', length);
-		for (uint32_t i = 0; i < length; i++)
-			m_password[i] = ascii_pool[random_int_range()];
-		return m_password;
+	string generate_password(const uint32_t& length = 10) {
+		std::string password = std::string(" ", length);
+		for (uint32_t i = 0; i < length; i++) {
+			password[i] = ascii_pool[random_int_range()];
+		}
+		return password;
 	}
 
 private:
-	std::string m_password;
-	void strengthen_password() {
+	void strengthen_password(std::string& m_password) {
 		if (entropy_bits(m_password) >= max_entropy(m_password.size())) // if the password is already strong discards the function
 			return;
 
@@ -44,7 +44,7 @@ private:
 		}
 		remove_adjacent_duplicates(m_password);
 		if (entropy_bits(m_password) < max_entropy(m_password.length()))
-			strengthen_password();
+			strengthen_password(m_password);
 	}
 };
 #endif

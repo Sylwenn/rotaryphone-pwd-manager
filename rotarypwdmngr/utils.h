@@ -2,8 +2,8 @@
 #ifndef UTILS
 #define UTILS
 
-const char ascii_pool[] = "!\"#$%&\'()*+,-./0123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz";
-constexpr uint32_t ascii_length = sizeof(ascii_pool) / sizeof(char);
+static const char* ascii_pool = "!#$%&()*+,-./123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz";
+static uint32_t ascii_length = (std::string(ascii_pool).size());
 
 const char charset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 const char upper_pool[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -128,7 +128,7 @@ int random_int(const T& seed = 0) {
 	return distribution(engine);
 }
 
-int random_int_range(const int& lower_bound = 0, const int& upper_bound = ascii_length) {
+int random_int_range(const int& lower_bound = 0, const int& upper_bound = ascii_length - 1) {
 	if (lower_bound >= upper_bound)
 		throw lower_bound, upper_bound;
 	uint32_t seed = (uint32_t)std::chrono::steady_clock::now().time_since_epoch().count();
@@ -194,4 +194,5 @@ std::string shiftDecrypt(const std::string& shiftCrypted, const size_t& amount) 
 	std::string shiftDecrypted = bitsetToString(bits);
 	return shiftDecrypted;
 }
+
 #endif
