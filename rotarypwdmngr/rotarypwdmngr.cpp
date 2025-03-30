@@ -9,7 +9,7 @@ static ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
 int selectedIndex = -1;
 
 static std::string password, new_password;
-static const char* c_password = nullptr, *c_new_password = nullptr; // c_str of password for imgui
+static const char* c_password = nullptr, * c_new_password = nullptr; // c_str of password for imgui
 static int passwordLength;
 
 static char* input_password = new char[64](' ');
@@ -19,16 +19,14 @@ void CleanupDeviceD3D();
 void CreateRenderTarget();
 void CleanupRenderTarget();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-string HandleWebsiteClick(int index, std::vector<std::string> passwordelements)
-{
+string HandleWebsiteClick(int index, std::vector<std::string> passwordelements) {
 	selectedIndex = index;
 	std::cout << "Website clicked at index: " << index << ", Name: " << passwordelements[index] << std::endl;
 	string decryptedpassword = decryptPassword(index);
 	std::cout << "Decrypted password: " << decryptedpassword << std::endl;
 	return decryptedpassword;
 }
-void GetWindowSize(HWND hWnd, int& width, int& height)
-{
+void GetWindowSize(HWND hWnd, int& width, int& height) {
 	RECT rect;
 	if (GetClientRect(hWnd, &rect)) {
 		width = rect.right - rect.left;
@@ -37,8 +35,7 @@ void GetWindowSize(HWND hWnd, int& width, int& height)
 }
 
 
-int main()
-{
+int main() {
 	initChecks();
 	std::vector<std::string> keys = loadKeysToMemory();
 	std::vector<std::string> passwords = loadPasswordsToMemory();
@@ -52,8 +49,7 @@ int main()
 	//HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"Rotary Password Manager", WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
 	SetLayeredWindowAttributes(hwnd, RGB(0, 0, 0), 0, LWA_COLORKEY);
 	// Initialize Direct3D
-	if (!CreateDeviceD3D(hwnd))
-	{
+	if (!CreateDeviceD3D(hwnd)) {
 		CleanupDeviceD3D();
 		::UnregisterClassW(wc.lpszClassName, wc.hInstance);
 		return 1;
@@ -103,14 +99,12 @@ int main()
 
 	// Main loop
 	bool done = false;
-	while (!done)
-	{
+	while (!done) {
 
 		// Poll and handle messages (inputs, window resize, etc.)
 		// See the WndProc() function below for our to dispatch events to the Win32 backend.
 		MSG msg;
-		while (::PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
-		{
+		while (::PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE)) {
 			::TranslateMessage(&msg);
 			::DispatchMessage(&msg);
 			if (msg.message == WM_QUIT)
@@ -120,16 +114,14 @@ int main()
 			break;
 
 		// Handle window being minimized or screen locked
-		if (g_SwapChainOccluded && g_pSwapChain->Present(0, DXGI_PRESENT_TEST) == DXGI_STATUS_OCCLUDED)
-		{
+		if (g_SwapChainOccluded && g_pSwapChain->Present(0, DXGI_PRESENT_TEST) == DXGI_STATUS_OCCLUDED) {
 			::Sleep(10);
 			continue;
 		}
 		g_SwapChainOccluded = false;
 
 		// Handle window resize (we don't resize directly in the WM_SIZE handler)
-		if (g_ResizeWidth != 0 && g_ResizeHeight != 0)
-		{
+		if (g_ResizeWidth != 0 && g_ResizeHeight != 0) {
 			CleanupRenderTarget();
 			g_pSwapChain->ResizeBuffers(0, g_ResizeWidth, g_ResizeHeight, DXGI_FORMAT_UNKNOWN, 0);
 			g_ResizeWidth = g_ResizeHeight = 0;
@@ -205,10 +197,11 @@ int main()
 							ImGui::Columns(1);
 							ImGui::EndTabItem();
 						}
-						if (ImGui::BeginTabItem("Generator"))
-						{
+						if (ImGui::BeginTabItem("Generator")) {
 							PasswordGenerator generator;
 							passwordLength = 12;
+
+							passwordLength = std::clamp(passwordLength, 0, 64);
 
 							ImGui::Text("Password Generator");
 							ImGui::InputInt("Length", &passwordLength);
@@ -227,17 +220,15 @@ int main()
 							}
 							ImGui::EndTabItem();
 						}
-						if (ImGui::BeginTabItem("Settings"))
-						{
+						if (ImGui::BeginTabItem("Settings")) {
 							centerNextImGui();
 							ImGui::BeginChild("SettingsMain", ImVec2(800, 400), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 							ImGui::Text("TODO");
 							ImGui::EndChild();
 							ImGui::EndTabItem();
 						}
-						if (ImGui::BeginTabItem("Password Strenghtener"))
-						{
-							
+						if (ImGui::BeginTabItem("Password Strenghtener")) {
+
 							centerNextImGui();
 							ImGui::BeginChild("SettingsMain", ImVec2(800, 400), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 							ImGui::Text("Password Strenghtener");
@@ -248,7 +239,7 @@ int main()
 								strengthen_password(new_password);
 								c_new_password = new_password.c_str();
 								std::cout << new_password << std::endl;
-								
+
 							}
 							if (c_new_password != nullptr) {
 								ImGui::Text(c_new_password);
@@ -260,8 +251,7 @@ int main()
 					ImGui::EndTabBar();
 				}
 			}
-			else
-			{
+			else {
 				PostQuitMessage(0);
 			}
 			ImGui::End();
@@ -295,8 +285,7 @@ int main()
 
 
 
-bool CreateDeviceD3D(HWND hWnd)
-{
+bool CreateDeviceD3D(HWND hWnd) {
 	// Setup swap chain
 	DXGI_SWAP_CHAIN_DESC sd;
 	ZeroMemory(&sd, sizeof(sd));
@@ -328,24 +317,21 @@ bool CreateDeviceD3D(HWND hWnd)
 	return true;
 }
 
-void CleanupDeviceD3D()
-{
+void CleanupDeviceD3D() {
 	CleanupRenderTarget();
 	if (g_pSwapChain) { g_pSwapChain->Release(); g_pSwapChain = nullptr; }
 	if (g_pd3dDeviceContext) { g_pd3dDeviceContext->Release(); g_pd3dDeviceContext = nullptr; }
 	if (g_pd3dDevice) { g_pd3dDevice->Release(); g_pd3dDevice = nullptr; }
 }
 
-void CreateRenderTarget()
-{
+void CreateRenderTarget() {
 	ID3D11Texture2D* pBackBuffer;
 	g_pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer));
 	g_pd3dDevice->CreateRenderTargetView(pBackBuffer, nullptr, &g_mainRenderTargetView);
 	pBackBuffer->Release();
 }
 
-void CleanupRenderTarget()
-{
+void CleanupRenderTarget() {
 	if (g_mainRenderTargetView) { g_mainRenderTargetView->Release(); g_mainRenderTargetView = nullptr; }
 }
 
@@ -357,13 +343,11 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 // - When io.WantCaptureMouse is true, do not dispatch mouse input data to your main application, or clear/overwrite your copy of the mouse data.
 // - When io.WantCaptureKeyboard is true, do not dispatch keyboard input data to your main application, or clear/overwrite your copy of the keyboard data.
 // Generally you may always pass all inputs to dear imgui, and hide them from your application based on those two flags.
-LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
+LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
 		return true;
 
-	switch (msg)
-	{
+	switch (msg) {
 	case WM_SIZE:
 		if (wParam == SIZE_MINIMIZED)
 			return 0;

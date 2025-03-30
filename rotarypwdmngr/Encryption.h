@@ -18,7 +18,7 @@ public:
 		for (size_t i = 0; i < length; ++i) {
 			key[i] = charset[dist(rng)];
 		}
-		
+
 		m_key = bitcastString(key);
 		std::cout << bitsetToString(m_key);
 #ifdef EXTENDED_ENCRYPTION
@@ -37,7 +37,7 @@ public:
 		return output;
 	}
 
-	const size_t getShiftAmount() const{
+	const size_t getShiftAmount() const {
 		return shift_amount;
 	}
 

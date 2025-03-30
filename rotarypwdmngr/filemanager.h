@@ -4,8 +4,7 @@
 #include "includes.h"
 class FileManager {
 public:
-	bool doesFileExist(const std::string& filename)
-	{
+	bool doesFileExist(const std::string& filename) {
 		std::ifstream file(filename);
 		return file.good();
 	}
@@ -50,7 +49,7 @@ public:
 		}
 
 		for (const std::string& line : lines) { //Add to new files
-			file.write(line.c_str(), line.size()); 
+			file.write(line.c_str(), line.size());
 			file.put('\n');
 		}
 
@@ -60,7 +59,7 @@ public:
 	void writeToNextLine(const std::string& filename, const std::string& data) {
 		std::ofstream file;
 		if (isBinary(data)) {
-			file.open(filename, std::ios::binary | std::ios::app);  
+			file.open(filename, std::ios::binary | std::ios::app);
 		}
 		else {
 			file.open(filename, std::ios::app);
@@ -71,13 +70,12 @@ public:
 			return;
 		}
 
-		file.write(data.c_str(), data.size()); 
-		file.put('\n'); 
+		file.write(data.c_str(), data.size());
+		file.put('\n');
 
 		file.close();
 	}
-	std::string readFromFile(const std::string& filename)
-	{
+	std::string readFromFile(const std::string& filename) {
 		std::ifstream file(filename, std::ios::binary | std::ios::ate);
 		if (!file) {
 			std::cerr << "Error opening file for reading!" << std::endl;
@@ -92,7 +90,8 @@ public:
 
 		if (isBinary(content)) {
 			//std::cout << "The file is binary." << std::endl;
-		} else {
+		}
+		else {
 			//std::cout << "The file is text." << std::endl;
 		}
 

@@ -64,8 +64,7 @@ int get_char_type(const char character) {
 
 std::vector<uint32_t> char_stats(const std::string& str) {
 	uint32_t upper_count = NULL, lower_count = NULL, digit_count = NULL, symbol_count = NULL;
-	for (uint32_t i = 0; i < str.size(); i++)
-	{
+	for (uint32_t i = 0; i < str.size(); i++) {
 		if (get_char_type(str[i]) == 0)      // if uppercase
 			upper_count++;
 
@@ -90,26 +89,21 @@ double entropy_bits(const std::string& str) {
 	// ignore states to prevent overaddition to pool_size
 	bool ignore_symbol_chars = 0, ignore_digits = 0, ignore_uppercase = 0, ignore_lowercase = 0;
 
-	for (uint32_t i = 0; i < str.size(); i++)
-	{
+	for (uint32_t i = 0; i < str.size(); i++) {
 		char_type i_char = (char_type)get_char_type(str[i]);
-		if (i_char == 0 && !ignore_uppercase)
-		{
+		if (i_char == 0 && !ignore_uppercase) {
 			pool_size += 26;
 			ignore_uppercase = 1;
 		}
-		else if (i_char == 1 && !ignore_lowercase)
-		{
+		else if (i_char == 1 && !ignore_lowercase) {
 			pool_size += 26;
 			ignore_lowercase = 1;
 		}
-		else if (i_char == 2 && !ignore_digits)
-		{
+		else if (i_char == 2 && !ignore_digits) {
 			pool_size += 10;
 			ignore_digits = 1;
 		}
-		else if (i_char == 3 && !ignore_symbol_chars)
-		{
+		else if (i_char == 3 && !ignore_symbol_chars) {
 			pool_size += 32;
 			ignore_symbol_chars = 1;
 		}
@@ -153,8 +147,7 @@ void remove_adjacent_duplicates(std::string& str) {
 	}
 }
 
-bool isBinary(const std::string& data)
-{
+bool isBinary(const std::string& data) {
 	for (char ch : data) {
 		if (ch < 32 || ch > 126) {
 			return true;
