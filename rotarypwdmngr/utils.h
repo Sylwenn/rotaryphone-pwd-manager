@@ -2,14 +2,15 @@
 #ifndef UTILS
 #define UTILS
 
+// Consts
 static const char* ascii_pool = "!#$%&()*+,-./123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz";
 static size_t ascii_length = (std::string(ascii_pool).size());
 
-const char charset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-const char upper_pool[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const char lower_pool[] = "abcdefghijklmnopqrstuvwxyz";
-const char digit_pool[] = "0123456789";
-const char symbol_pool[] = "!\"#$%&\'()*+,-./:;<=>?";
+constexpr char charset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+constexpr char upper_pool[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+constexpr char lower_pool[] = "abcdefghijklmnopqrstuvwxyz";
+constexpr char digit_pool[] = "0123456789";
+constexpr char symbol_pool[] = "!\"#$%&\'()*+,-./:;<=>?";
 
 constexpr uint32_t upper_length = sizeof(upper_pool) / sizeof(char);
 constexpr uint32_t lower_length = sizeof(lower_pool) / sizeof(char);
@@ -17,7 +18,6 @@ constexpr uint32_t digit_length = sizeof(digit_pool) / sizeof(char);
 constexpr uint32_t symbol_length = sizeof(symbol_pool) / sizeof(char);
 
 // Tools and Util
-
 template <typename Ty_>
 struct Vector2 {
 public:
@@ -32,14 +32,14 @@ enum char_type { // char type
 	symbol_
 };
 
-bool is_value_within_range(const int lower_bound, const int value, const int upper_bound) {
+constexpr bool is_value_within_range(const int lower_bound, const int value, const int upper_bound) {
 	if (lower_bound <= value && value <= upper_bound)
 		return true;
 	return false;
 }
 
 // compares the ascii value of char to ranges of different char types
-int get_char_type(const char character) {
+constexpr int get_char_type(const char character) {
 	bool is_uppercase = is_value_within_range(65, int(character), 90);
 	bool is_lowercase = is_value_within_range(97, int(character), 122);
 	bool is_digit = is_value_within_range(48, int(character), 57);
@@ -81,7 +81,7 @@ std::vector<uint32_t> char_stats(const std::string& str) {
 }
 
 // returns the maximum possible entropy of a string wih that length
-double max_entropy(const size_t& password_length) { return password_length * log2(94); }
+constexpr double max_entropy(const size_t& password_length) { return password_length * log2(94); }
 
 double entropy_bits(const std::string& str) {
 	uint32_t pool_size = 0;
@@ -147,7 +147,7 @@ void remove_adjacent_duplicates(std::string& str) {
 	}
 }
 
-bool isBinary(const std::string& data) {
+constexpr bool isBinary(const std::string& data) {
 	for (char ch : data) {
 		if (ch < 32 || ch > 126) {
 			return true;
