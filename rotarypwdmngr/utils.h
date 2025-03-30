@@ -81,7 +81,7 @@ std::vector<uint32_t> char_stats(const std::string& str) {
 }
 
 // returns the maximum possible entropy of a string wih that length
-constexpr double max_entropy(const size_t& password_length) { return password_length * log2(94); }
+inline double max_entropy(const size_t& password_length) { return password_length * log2(94); }
 
 double entropy_bits(const std::string& str) {
 	uint32_t pool_size = 0;

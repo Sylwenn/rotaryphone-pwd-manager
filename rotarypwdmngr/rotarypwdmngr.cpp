@@ -9,9 +9,9 @@ static ID3D11RenderTargetView* g_mainRenderTargetView = nullptr;
 int selectedIndex = -1;
 
 static std::string password, new_password;
-static const char* c_password = nullptr, * c_new_password = nullptr; // c_str of password for imgui
+static const char* c_password = nullptr, * c_new_password = nullptr; // c_str of generated password
 static int passwordLength;
-static char* input_password = new char[64](' ');
+static char* input_password = new char[64](' ');// c_str of input passwod
 
 // Forward declarations of helper functions
 bool CreateDeviceD3D(HWND hWnd);
@@ -22,8 +22,8 @@ void CleanupRenderTarget();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 static string HandleWebsiteClick(int index, std::vector<std::string> passwordelements) {
 	selectedIndex = index;
-	std::cout << "Website clicked at index: " << index << ", Name: " << passwordelements[index] << std::endl;
 	string decryptedpassword = decryptPassword(index);
+	std::cout << "Website clicked at index: " << index << ", Name: " << passwordelements[index] << std::endl;
 	std::cout << "Decrypted password: " << decryptedpassword << std::endl;
 	return decryptedpassword;
 }
@@ -142,6 +142,7 @@ int main() {
 				ImGui::SetNextWindowSize(ImVec2(815, 0));
 				ImGui::Begin("Rotary Password Manager", &show_main_window, ImGuiWindowFlags_NoCollapse);
 				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
+
 				ImGui::Separator();
 				ImGui::Columns(1);
 				if (ImGui::BeginTabBar("#tabs")) {
