@@ -147,7 +147,7 @@ void remove_adjacent_duplicates(std::string& str) {
 	}
 }
 
-constexpr bool isBinary(const std::string& data) {
+bool isBinary(const std::string& data) {
 	for (char ch : data) {
 		if (ch < 32 || ch > 126) {
 			return true;
