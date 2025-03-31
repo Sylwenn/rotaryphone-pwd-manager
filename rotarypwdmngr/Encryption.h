@@ -2,33 +2,32 @@
 #ifndef ENCRYPTION
 #define ENCRYPTION
 #define EXTENDED_ENCRYPTION
-#include "includes.h"
 using std::string;
 
-class Encryption {
-private:
-	std::bitset<256> m_key;
-	string m_iv;
-	size_t shift_amount = 0;
+class encryption {
+	std::bitset<256> m_key_;
+	string m_iv_;
+	size_t shift_amount_ = 0;
 public:
-	string generateKey(const size_t& length) {
+	string generate_key(const size_t& length) {
 		std::default_random_engine rng(std::random_device{}());
 		std::uniform_int_distribution<> dist(0, sizeof(charset) - 2);
-		string key = string(length, ' ');
+		auto key = string(length, ' ');
 		for (size_t i = 0; i < length; ++i) {
 			key[i] = charset[dist(rng)];
 		}
 
-		m_key = bitcastString(key);
-		std::cout << bitsetToString(m_key);
+		m_key_ = bitcastString(key);
+		std::cout << bitset_to_string(m_key_);
 #ifdef EXTENDED_ENCRYPTION
-		std::uniform_int_distribution<> dist2(1, 5);
-		shift_amount = dist2(rng);
-		m_key = m_key << shift_amount;
+		std::uniform_int_distribution dist2(1, 5);
+		shift_amount_ = dist2(rng);
+		m_key_ = m_key_ << shift_amount_;
 #endif
-		return bitsetToString(m_key);
+		return bitset_to_string(m_key_);
 	}
-	string xorCrypt(const string& passwd, const string& key) {
+
+	static string xorCrypt(const string& passwd, const string& key) {
 		string output = passwd;
 		for (size_t i = 0; i < passwd.size(); ++i) {
 			output[i] ^= key[i % key.size()];
@@ -37,8 +36,9 @@ public:
 		return output;
 	}
 
-	const size_t getShiftAmount() const {
-		return shift_amount;
+	size_t get_shift_amount() const
+	{
+		return shift_amount_;
 	}
 
 };
