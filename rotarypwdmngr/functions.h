@@ -1,21 +1,18 @@
 #pragma once
-#include "includes.h"
+inline encryption enc;
 
-
-Encryption enc;
-FileManager file;
-PasswordGenerator passgen;
 using std::string;
-string key;
-int KEYSIZE = 32;
+inline string key;
+inline int keysize = 32;
 
 
-void centerNextImGui() {
-	float availableWidth = ImGui::GetContentRegionAvail().x;
-	float posX = (availableWidth - 800) * 0.5f;
-	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + posX);
+inline void center_next_im_gui() {
+	const float available_width = ImGui::GetContentRegionAvail().x;
+	const float pos_x = (available_width - 800) * 0.5f;
+	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + pos_x);
 }
-void getValidIndexInput(int& input, int min, int max) {
+
+inline void get_valid_index_input(int& input, const int min, const int max) {
 	while (true) {
 		std::cout << "Enter the website number between " << min << " and " << max << ": ";
 		std::cin >> input;
@@ -35,7 +32,7 @@ void getValidIndexInput(int& input, int min, int max) {
 	}
 }
 
-void getNonEmptyInput(std::string& input, const std::string& prompt) {
+inline void get_non_empty_input(std::string& input, const std::string& prompt) {
 	while (true) {
 		std::cout << prompt;
 		std::getline(std::cin, input);
@@ -47,85 +44,88 @@ void getNonEmptyInput(std::string& input, const std::string& prompt) {
 		std::cout << "Input cannot be empty! Please try again.\n";
 	}
 }
-std::vector<std::string> loadKeysToMemory() {
-	std::vector<std::string> keys = file.readFromFileLineByLine("keys.txt");
 
-	/*std::cout << "Keys from file:" << std::endl;
+inline std::vector<std::string> load_keys_to_memory() {
+	std::vector<std::string> keys = file_manager::read_from_file_line_by_line("keys.txt");
+
+	/*std::cout << "Keys from file:" << "\n";
 	for (size_t i = 0; i < keys.size(); ++i) {
-		std::cout << "Keys " << i + 1 << ": " << keys[i] << std::endl;
+		std::cout << "Keys " << i + 1 << ": " << keys[i] << "\n";
 	}*/
 
 	return keys;
 }
 
-std::vector<std::string> loadPasswordsToMemory() {
-	std::vector<std::string> passwords = file.readFromFileLineByLine("passwords.txt");
+inline std::vector<std::string> load_passwords_to_memory() {
+	std::vector<std::string> passwords = file_manager::read_from_file_line_by_line("passwords.txt");
 
-	/*std::cout << "Passwords from file:" << std::endl;
+	/*std::cout << "Passwords from file:" << "\n";
 	for (size_t i = 0; i < passwords.size(); ++i) {
-		std::cout << "Pass " << i + 1 << ": " << passwords[i] << std::endl;
+		std::cout << "Pass " << i + 1 << ": " << passwords[i] << "\n";
 	} */
 
 	return passwords;
 }
-std::vector<std::string> loadPasswordElementsToMemory() {
-	std::vector<std::string> passwordelements = file.readFromFileLineByLine("passwordelements.txt");
 
-	/*std::cout << "Passwords from file:" << std::endl;
+inline std::vector<std::string> load_password_elements_to_memory() {
+	std::vector<std::string> passwordelements = file_manager::read_from_file_line_by_line("passwordelements.txt");
+
+	/*std::cout << "Passwords from file:" << "\n";
 	for (size_t i = 0; i < passwords.size(); ++i) {
-		std::cout << "Pass " << i + 1 << ": " << passwords[i] << std::endl;
+		std::cout << "Pass " << i + 1 << ": " << passwords[i] << "\n";
 	} */
 
 	return passwordelements;
 }
 
-void addPassword(string passwordelements, string password) {
-	std::vector<std::string> keys = loadKeysToMemory();
-	string encryptedpass = enc.xorCrypt(password, keys[0]);
-	file.writeToNextLine("passwords.txt", encryptedpass);
-	file.writeToNextLine("passwordelements.txt", passwordelements);
-}
-void deletePassword(string filename, int lineToDelete) {
-	file.deleteSpecificLine(filename, lineToDelete);
+inline void add_password(const string& passwordelements, const string& password) {
+	const std::vector<std::string> keys = load_keys_to_memory();
+	const string encryptedpass = encryption::xorCrypt(password, keys[0]);
+	file_manager::write_to_next_line("passwords.txt", encryptedpass);
+	file_manager::write_to_next_line("passwordelements.txt", passwordelements);
 }
 
-string decryptPassword(int line) {
-	std::vector<std::string> keys = loadKeysToMemory();
-	std::vector<std::string> passwords = loadPasswordsToMemory();
-	string decryptedpassword = enc.xorCrypt(passwords[line], keys[0]);
+inline void delete_password(const string& filename, const int line_to_delete) {
+	file_manager::delete_specific_line(filename, line_to_delete);
+}
+
+inline string decrypt_password(const int line) {
+	const std::vector<std::string> keys = load_keys_to_memory();
+	const std::vector<std::string> passwords = load_passwords_to_memory();
+	string decryptedpassword = encryption::xorCrypt(passwords[line], keys[0]);
 	return decryptedpassword;
 
 }
 
-void getWebsites() {
-	std::vector<std::string> passwords = loadPasswordsToMemory();
-	std::vector<std::string> passwordelements = loadPasswordElementsToMemory();
-	std::cout << "Websites You Saved:" << std::endl;
+inline void get_websites() {
+	std::vector<std::string> passwords = load_passwords_to_memory();
+	const std::vector<std::string> passwordelements = load_password_elements_to_memory();
+	std::cout << "Websites You Saved:" << "\n";
 	for (size_t i = 0; i < passwordelements.size(); ++i) {
-		std::cout << "[" << i + 1 << "]: " << passwordelements[i] << std::endl;
+		std::cout << "[" << i + 1 << "]: " << passwordelements[i] << "\n";
 	}
 }
 
-void initChecks() {
+inline void init_checks() {
 
-	if (file.doesFileExist("keys.txt")) {
-		key = file.readFromFile("keys.txt");
+	if (file_manager::does_file_exist("keys.txt")) {
+		key = file_manager::read_from_file("keys.txt");
 		if (key.empty()) {
-			key = enc.generateKey(32);
-			file.writeToFile("keys.txt", key);
+			key = enc.generate_key(32);
+			file_manager::write_to_file("keys.txt", key);
 
 		}
 	}
 	else {
-		key = enc.generateKey(32);
-		file.createFile("keys.txt");
-		file.writeToFile("keys.txt", key);
+		key = enc.generate_key(32);
+		file_manager::create_file("keys.txt");
+		file_manager::write_to_file("keys.txt", key);
 	}
-	if (!file.doesFileExist("passwords.txt")) {
-		file.createFile("passwords.txt");
+	if (!file_manager::does_file_exist("passwords.txt")) {
+		file_manager::create_file("passwords.txt");
 	}
-	if (!file.doesFileExist("passwordelements.txt")) {
-		file.createFile("passwordelements.txt");
+	if (!file_manager::does_file_exist("passwordelements.txt")) {
+		file_manager::create_file("passwordelements.txt");
 	}
 
 }

@@ -216,10 +216,6 @@ DocProject/Help/html
 
 # Click-Once directory
 publish/
-x64/
-rotarypwdmngr/*.txt
-rotarypwdmngr/*.ini
-build/
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml
@@ -271,6 +267,10 @@ _pkginfo.txt
 !?*.[Cc]ache/
 
 # Others
+x64/
+rotarypwdmngr/*.txt
+rotarypwdmngr/*.ini
+build/
 .txt
 ClientBin/
 ~$*
@@ -438,3 +438,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/rotarypwdmngr/imgui.ini
+/rotarypwdmngr/passwordelements.txt
+/rotarypwdmngr/passwords.txt
+/rotarypwdmngr/keys.txt

@@ -1,25 +1,27 @@
 #pragma once
 #ifndef FILE_MANAGER
 #define FILE_MANAGER
-#include "includes.h"
-class FileManager {
+class file_manager {
 public:
-	bool doesFileExist(const std::string& filename) {
-		std::ifstream file(filename);
+	static bool does_file_exist(const std::string& filename) {
+		const std::ifstream file(filename);
 		return file.good();
 	}
-	void createFile(std::string filename) {
+
+	static void create_file(const std::string& filename) {
 		std::ofstream file;
 		file.open(filename);
 		file.close();
 	}
-	void deleteFile(std::string filename) {
+
+	static void delete_file(const std::string& filename) {
 		remove(filename.c_str());
 	}
-	void writeToFile(const std::string& filename, const std::string& data) {
+
+	static void write_to_file(const std::string& filename, const std::string& data) {
 		std::ofstream file;
 
-		if (isBinary(data)) {
+		if (is_binary(data)) {
 			file.open(filename, std::ios::binary);
 		}
 		else {
@@ -27,16 +29,17 @@ public:
 		}
 
 		if (!file) {
-			std::cerr << "Error opening file for writing!" << std::endl;
+			std::cerr << "Error opening file for writing!" << "\n";
 			return;
 		}
 
 		file.write(data.c_str(), data.size());
 		file.close();
 	}
-	void writeLineByLineToFile(const std::string& filename, const std::vector<std::string>& lines) {
+
+	static void write_line_by_line_to_file(const std::string& filename, const std::vector<std::string>& lines) {
 		std::ofstream file;
-		if (isBinary(lines[0])) { //Binary Check
+		if (is_binary(lines[0])) { //Binary Check
 			file.open(filename, std::ios::binary);
 		}
 		else {
@@ -44,7 +47,7 @@ public:
 		}
 
 		if (!file) { //File Check
-			std::cerr << "Error opening file for writing!" << std::endl;
+			std::cerr << "Error opening file for writing!" << "\n";
 			return;
 		}
 
@@ -56,9 +59,9 @@ public:
 		file.close();
 	}
 
-	void writeToNextLine(const std::string& filename, const std::string& data) {
+	static void write_to_next_line(const std::string& filename, const std::string& data) {
 		std::ofstream file;
-		if (isBinary(data)) {
+		if (is_binary(data)) {
 			file.open(filename, std::ios::binary | std::ios::app);
 		}
 		else {
@@ -66,7 +69,7 @@ public:
 		}
 
 		if (!file) {
-			std::cerr << "Error opening file for writing!" << std::endl;
+			std::cerr << "Error opening file for writing!" << "\n";
 			return;
 		}
 
@@ -75,29 +78,24 @@ public:
 
 		file.close();
 	}
-	std::string readFromFile(const std::string& filename) {
+
+	static std::string read_from_file(const std::string& filename) {
 		std::ifstream file(filename, std::ios::binary | std::ios::ate);
 		if (!file) {
-			std::cerr << "Error opening file for reading!" << std::endl;
+			std::cerr << "Error opening file for reading!" << "\n";
 			return "";
 		}
-		size_t size = file.tellg();
+		const size_t size = file.tellg();
 		file.seekg(0, std::ios::beg);
 
 		std::string content(size, '\0');
-		file.read(&content[0], size);
+		file.read(content.data(), size);
 		file.close();
-
-		if (isBinary(content)) {
-			//std::cout << "The file is binary." << std::endl;
-		}
-		else {
-			//std::cout << "The file is text." << std::endl;
-		}
 
 		return content;
 	}
-	std::vector<std::string> readFromFileLineByLine(std::string filename) {
+
+	static std::vector<std::string> read_from_file_line_by_line(const std::string& filename) {
 		std::ifstream file;
 		file.open(filename);
 		std::vector<std::string> data;
@@ -108,35 +106,36 @@ public:
 		file.close();
 		return data;
 	}
-	void deleteSpecificLine(const std::string& filename, int lineToDelete) {
+
+	static void delete_specific_line(const std::string& filename, int line_to_delete) {
 		std::vector<std::string> lines;
 		std::ifstream file(filename);
 		std::string line;
-		int currentLine = 0;
+		int current_line = 0;
 		while (std::getline(file, line)) {
-			if (currentLine != lineToDelete) {
+			if (current_line != line_to_delete) {
 				lines.push_back(line);
 			}
-			currentLine++;
+			current_line++;
 		}
 		file.close();
 
-		if (lineToDelete < 0 || lineToDelete >= static_cast<int>(lines.size())) {
-			std::cerr << "Error: Invalid line number!" << std::endl;
+		if (line_to_delete < 0 || line_to_delete >= static_cast<int>(lines.size())) {
+			std::cerr << "Error: Invalid line number!" << "\n";
 			return;
 		}
-		std::ofstream outFile(filename);
-		if (!outFile) {
-			std::cerr << "Error opening file for writing!" << std::endl;
+		std::ofstream out_file(filename);
+		if (!out_file) {
+			std::cerr << "Error opening file for writing!" << "\n";
 			return;
 		}
 
 		for (const auto& l : lines) {
-			outFile << l << "\n";
+			out_file << l << "\n";
 		}
-		outFile.close();
+		out_file.close();
 
-		std::cout << "Line " << lineToDelete << " deleted successfully." << std::endl;
+		std::cout << "Line " << line_to_delete << " deleted successfully." << "\n";
 	}
 };
 
