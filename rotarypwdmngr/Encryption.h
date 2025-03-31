@@ -36,8 +36,7 @@ public:
 		return output;
 	}
 
-	size_t get_shift_amount() const
-	{
+	size_t get_shift_amount() const {
 		return shift_amount_;
 	}
 
