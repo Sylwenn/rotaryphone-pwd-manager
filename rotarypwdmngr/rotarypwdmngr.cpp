@@ -251,6 +251,9 @@ int main() {
 	DestroyWindow(hwnd);
 	UnregisterClassW(wc.lpszClassName, wc.hInstance);
 
+	delete[] c_password;
+	delete[] c_new_password;
+
 	return 0;
 }
 

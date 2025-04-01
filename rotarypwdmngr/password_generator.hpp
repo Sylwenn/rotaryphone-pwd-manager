@@ -56,9 +56,8 @@ inline void strengthen_password(std::string& m_password) {
 			instruction.y = i; // finds the missing char type
 	}
 
-	for (char& i : m_password) //https://clang.llvm.org/extra/clang-tidy/checks/modernize/loop-convert.html
-	{
-		if (get_char_type(i) == instruction.x) {  // NOLINT(clang-diagnostic-sign-compare)
+	for (char& i : m_password) {
+		if (get_char_type(i) == instruction.x) {
 			if (instruction.y == 0)
 				i = upper_pool[random_int_range(0, upper_length)]; // if the missing char type is an upper case char
 			else if (instruction.y == 1)
