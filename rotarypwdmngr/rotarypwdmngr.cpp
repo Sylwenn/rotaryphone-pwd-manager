@@ -18,10 +18,11 @@ namespace {
 	auto input_password = std::make_unique<char[]>(64); // Use smart pointer for memory management
 
 	// Handle website click event
-	string handle_website_click(const int index, std::vector<std::string> passwordelements) {
+	string handle_website_click(const int index, const std::vector<std::string>& passwordelements) {
 		selected_index = index;
 		string decryptedpassword = decrypt_password(index);
-		std::cout << "Website clicked at index: " << index << ", Name: " << passwordelements[index] << "\n";
+		std::string website = passwordelements[index].substr(0, passwordelements[index].find(" | "));
+		std::cout << "Website clicked at index: " << index << ", Name: " << website << "\n";
 		std::cout << "Decrypted password: " << decryptedpassword << "\n";
 		return decryptedpassword;
 	}
@@ -134,7 +135,13 @@ int main() {
 					std::vector<std::string> passwordelements = load_password_elements_to_memory();
 					std::vector<const char*> items;
 					items.reserve(passwordelements.size());
+					std::vector<std::string> websites;
+					websites.reserve(passwordelements.size());
 					for (const std::string& str : passwordelements) {
+						websites.push_back(str.substr(0, str.find(" | ")));
+					}
+					items.reserve(websites.size());
+					for (const std::string& str : websites) {
 						items.push_back(str.c_str());
 					}
 					ImGui::PushItemWidth(150);
@@ -145,8 +152,11 @@ int main() {
 					ImGui::NextColumn();
 					ImGui::BeginChild("PasswordListRight", ImVec2(400, 200), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 					if (selected_index >= 0) {
-						ImGui::Text("Password for %s:", passwordelements[selected_index].c_str());
-						ImGui::Text("%s", decrypt_password(selected_index).c_str());
+						std::string website = passwordelements[selected_index].substr(0, passwordelements[selected_index].find(" | "));
+						std::string username = passwordelements[selected_index].substr(passwordelements[selected_index].find(" | ") + 3);
+						ImGui::Text("Website: %s", website.c_str());
+						ImGui::Text("Username: %s", username.c_str());
+						ImGui::Text("Password: %s", decrypt_password(selected_index).c_str());
 						if (ImGui::Button("Delete Password")) {
 							delete_password("passwordelements.txt", selected_index);
 							delete_password("passwords.txt", selected_index);
@@ -157,17 +167,20 @@ int main() {
 					}
 					static char website_input[128] = "";   // Input buffer for the new website
 					static char password_input[128] = "";  // Input buffer for the new password
+					static char username_input[128] = "";  // Input buffer for the new username
 
 					ImGui::InputText("URL", website_input, IM_ARRAYSIZE(website_input));
+					ImGui::InputText("USERNAME", username_input, IM_ARRAYSIZE(username_input));
 					ImGui::InputText("PASS", password_input, IM_ARRAYSIZE(password_input));
 					if (ImGui::Button("Add Password")) {
 						if (strlen(website_input) == 0 || strlen(password_input) == 0) {
-							printf("Error: Website or Password is empty!\n");
+							printf("Error: Fill in all the boxes!\n");
 						}
 						else {
-							add_password(website_input, password_input);
+							add_password(website_input, username_input, password_input);
 							printf("Added: %s -> %s\n", website_input, password_input);
 							website_input[0] = '\0';
+							username_input[0] = '\0';
 							password_input[0] = '\0';
 						}
 					}

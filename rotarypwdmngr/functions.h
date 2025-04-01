@@ -78,11 +78,11 @@ inline std::vector<std::string> load_password_elements_to_memory() {
 	return passwordelements;
 }
 
-inline void add_password(const string& passwordelements, const string& password) {
+inline void add_password(const string& website, const string& username, const string& password) {
 	const std::vector<std::string> keys = load_keys_to_memory();
-	const string encryptedpass = encryption::xorCrypt(password, keys[0]);
-	file_manager::write_to_next_line("passwords.txt", encryptedpass);
-	file_manager::write_to_next_line("passwordelements.txt", passwordelements);
+	file_manager::write_to_next_line("passwords.txt", encryption::xorCrypt(password, keys[0]));
+	file_manager::write_to_next_line("passwordelements.txt", website + " | " + username);
+
 }
 
 inline void delete_password(const string& filename, const int line_to_delete) {
