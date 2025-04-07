@@ -1,5 +1,4 @@
 #include "includes.h"
-
 // Anonymous namespace for internal linkage
 namespace {
 	// Direct3D device and context pointers
@@ -10,11 +9,13 @@ namespace {
 	UINT g_resize_width = 0, g_resize_height = 0;
 	ID3D11RenderTargetView* g_main_render_target_view = nullptr;
 	int selected_index = -1;
-	std::string password;
-	std::string new_password;
-	const char* c_password = nullptr; // Pointer to c_str of generated password
-	const char* c_new_password = nullptr;
-	int password_length = 12; // Default password length
+
+	static bool insert_generator = 0;
+	static password_generator generator;
+	static std::string new_password, password, s_password_input;
+	static const char* c_password = nullptr; // Pointer to c_str of generated password
+	static const char* c_new_password = nullptr;
+	static int password_length = 12;
 	auto input_password = std::make_unique<char[]>(64); // Use smart pointer for memory management
 
 	// Handle website click event
@@ -171,14 +172,30 @@ int main() {
 
 					ImGui::InputText("URL", website_input, IM_ARRAYSIZE(website_input));
 					ImGui::InputText("USERNAME", username_input, IM_ARRAYSIZE(username_input));
-					ImGui::InputText("PASS", password_input, IM_ARRAYSIZE(password_input));
-					if (ImGui::Button("Add Password")) {
-						if (strlen(website_input) == 0 || strlen(password_input) == 0) {
+					if (!insert_generator)
+						ImGui::InputText("PASS", password_input, IM_ARRAYSIZE(password_input));
+					if (!insert_generator) {
+						if (ImGui::Button("Insert Generated Password")) {
+							insert_generator = true;
+						}
+					}
+					else {
+						ImGui::Text("Insert size");
+						password_length = std::clamp(password_length, 8, 64);
+						ImGui::InputInt("Length", &password_length);
+						if (ImGui::Button("Use User Password")) {
+							insert_generator = false;
+						}
+					}
+					if (ImGui::Button("Add Login Details")) {
+						if ((strlen(website_input) == 0)) {
 							printf("Error: Fill in all the boxes!\n");
 						}
 						else {
-							add_password(website_input, username_input, password_input);
-							printf("Added: %s -> %s\n", website_input, password_input);
+							s_password_input = generator.generate_password(password_length);
+							const char* final_password = insert_generator ? s_password_input.c_str() : password_input;
+							add_password(website_input, username_input, final_password);
+							printf("Added: %s -> %s\n", website_input, final_password);
 							website_input[0] = '\0';
 							username_input[0] = '\0';
 							password_input[0] = '\0';
@@ -190,14 +207,12 @@ int main() {
 					ImGui::EndTabItem();
 				}
 				if (ImGui::BeginTabItem("Generator")) {
-					password_length = 12;
-					password_length = std::clamp(password_length, 0, 64);
-
 					ImGui::Text("Password Generator");
 					ImGui::InputInt("Length", &password_length);
 
+					password_length = std::clamp(password_length, 8, 64);
+
 					if (ImGui::Button("Generate")) {
-						password_generator generator;
 						password = generator.generate_password(password_length);
 						c_password = password.c_str();
 					}
@@ -210,6 +225,7 @@ int main() {
 					}
 					ImGui::EndTabItem();
 				}
+				/*
 				if (ImGui::BeginTabItem("Settings")) {
 					center_next_im_gui();
 					ImGui::BeginChild("SettingsMain", ImVec2(800, 400), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
@@ -217,6 +233,7 @@ int main() {
 					ImGui::EndChild();
 					ImGui::EndTabItem();
 				}
+				*/
 				if (ImGui::BeginTabItem("Password Strengthener")) {
 					center_next_im_gui();
 					ImGui::BeginChild("SettingsMain", ImVec2(800, 400), true, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);

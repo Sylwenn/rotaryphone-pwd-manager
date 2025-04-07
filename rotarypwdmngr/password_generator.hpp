@@ -14,7 +14,6 @@ public:
 	password_generator() = default;
 	~password_generator() = default;
 
-	// Rule of Five: Delete copy/move constructors if not needed
 	password_generator(const password_generator&) = delete;
 	password_generator& operator=(const password_generator&) = delete;
 	password_generator(password_generator&&) = delete;

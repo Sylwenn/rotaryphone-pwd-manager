@@ -124,6 +124,7 @@ public:
 			std::cerr << "Error: Invalid line number!" << "\n";
 			return;
 		}
+
 		std::ofstream out_file(filename);
 		if (!out_file) {
 			std::cerr << "Error opening file for writing!" << "\n";
