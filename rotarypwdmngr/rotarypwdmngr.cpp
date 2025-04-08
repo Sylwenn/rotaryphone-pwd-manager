@@ -121,8 +121,9 @@ int main() {
 		if (show_main_window) {
 			ImGui::SetNextWindowSize(ImVec2(815, 0));
 			ImGui::Begin("Rotary Password Manager", &show_main_window, ImGuiWindowFlags_NoCollapse);
+#if ROTARY_DEBUG
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-
+#endif
 			ImGui::Separator();
 			ImGui::Columns(1);
 			if (ImGui::BeginTabBar("#tabs")) {
@@ -214,14 +215,17 @@ int main() {
 
 					if (ImGui::Button("Generate")) {
 						password = generator.generate_password(password_length);
+						for (size_t i = 0; i < password.size(); i++) {
+							std::clog << password[i] << "|" << int(password[i]) << std::endl;
+						}
 						c_password = password.c_str();
 					}
 
 					if (!password.empty()) {
-						ImGui::Text("%s", c_password);
 						if (ImGui::Button("Copy to Clipboard")) {
 							ImGui::SetClipboardText(c_password);
 						}
+						ImGui::Text("%s", c_password);
 					}
 					ImGui::EndTabItem();
 				}

@@ -30,10 +30,8 @@ public:
 	}
 
 private:
-	static inline const std::string ascii_pool = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
-
 	// Thread-safe random integer generator
-	static uint32_t random_int_range(const uint32_t min = 0, const uint32_t max = 61) {
+	static uint32_t random_int_range(const uint32_t min = 0, const uint32_t max = ascii_length - 1) {
 		thread_local std::mt19937 generator(std::random_device{}());
 		std::uniform_int_distribution distribution(min, max);
 		return distribution(generator);

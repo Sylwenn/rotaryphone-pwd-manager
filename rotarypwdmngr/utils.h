@@ -2,9 +2,11 @@
 #ifndef UTILS
 #define UTILS
 
+#define ROTARY_DEBUG 1
+
 // Consts
-static auto ascii_pool = "!#$%&()*+,-./123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz";
-static size_t ascii_length = std::string(ascii_pool).size();
+static const char* ascii_pool = "!#$%&()*+,-./123456789:;<=>?ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz";
+static size_t ascii_length = std::string(ascii_pool).size() - 1;
 
 constexpr char charset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 constexpr char upper_pool[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
